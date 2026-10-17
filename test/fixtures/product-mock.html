@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>模拟商品详情页 - 图提取测试固件</title>
+  <style>
+    body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f4fc; color: #333; }
+    .wrap { width: 1080px; margin: 0 auto; background: #fff; min-height: 4000px; padding: 24px; }
+    .crumb { color: #999; font-size: 13px; margin-bottom: 16px; }
+    .main { display: flex; gap: 24px; }
+    .gallery { width: 420px; }
+    .gallery .big img { width: 420px; height: 420px; object-fit: cover; border: 1px solid #eee; }
+    .thumbs { display: flex; gap: 8px; margin-top: 10px; }
+    .thumbs img { width: 64px; height: 64px; object-fit: cover; border: 1px solid #ddd; }
+    .info { flex: 1; }
+    .info h1 { font-size: 22px; }
+    .price { color: #e0533d; font-size: 26px; font-weight: 700; margin: 12px 0; }
+    .sku { display: flex; gap: 8px; margin: 12px 0; }
+    .sku img { width: 56px; height: 56px; border: 1px solid #ddd; object-fit: cover; }
+    .buy { margin-top: 20px; }
+    .buy button { padding: 12px 40px; font-size: 16px; border: none; border-radius: 4px; background: #e0533d; color: #fff; }
+    .detail-title { font-size: 18px; border-left: 4px solid #4f46e5; padding-left: 10px; margin: 48px 0 16px; }
+    .detail img { display: block; width: 750px; margin: 0 auto 8px; }
+    .bg-hero { width: 750px; height: 300px; margin: 8px auto; background-size: cover; background-position: center; }
+    .logo { width: 120px; height: 40px; background: #14112a; color: #fff; display: grid; place-items: center; font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="crumb">首页 &gt; 数码家电 &gt; 智能保温杯 500ml 316 不锈钢</div>
+
+  <div class="main">
+    <!-- 主图区：普通 src -->
+    <div class="gallery">
+      <div class="big"><img id="main-img" src="img/red.png" alt="主图" /></div>
+      <div class="thumbs">
+        <!-- 与主图重复：用于验证去重 -->
+        <img src="img/red.png" alt="缩略1" />
+        <!-- 懒加载 data-src -->
+        <img data-src="img/blue.png" alt="缩略2" class="lazy" />
+        <!-- 懒加载 data-original（京东风格） -->
+        <img data-original="img/green.png" alt="缩略3" class="lazy" />
+        <!-- 懒加载 data-lazyload（另一种命名） -->
+        <img data-lazyload="img/orange.png" alt="缩略4" class="lazy" />
+      </div>
+    </div>
+
+    <div class="info">
+      <!-- 站点 logo：应被过滤（页面元素，不是商品图采集源，但 content 脚本只收 img/背景图，此处为 div 文字） -->
+      <div class="logo">MOCK MALL</div>
+      <h1>智能保温杯 500ml 316 不锈钢 温度显示</h1>
+      <div class="price">¥129.00</div>
+      <div class="sku">
+        <img src="img/gold.png" alt="金色" />
+        <img src="img/pink.png" alt="粉色" />
+      </div>
+      <div class="buy"><button>立即购买</button> <button style="background:#4f46e5">加入购物车</button></div>
+      <p style="color:#777;font-size:13px;margin-top:16px">
+        本页为图提取插件的测试固件：包含普通 img、四种懒加载属性、背景图、
+        1×1 像素图、16×16 图标、SVG 占位图等干扰项。
+      </p>
+    </div>
+  </div>
+
+  <!-- 商品详情区：远在下方的懒加载长图（验证自动滚动触发） -->
+  <h2 class="detail-title">商品详情</h2>
+  <div class="detail">
+    <img data-lazy-src="img/purple.png" alt="详情图1" class="lazy" />
+    <img data-src="img/blue.png" alt="详情图2-重复蓝" class="lazy" />
+    <!-- 背景图商品横幅（验证 background-image 采集） -->
+    <div class="bg-hero" style="background-image: url('img/pink.png')"></div>
+    <!-- srcset（验证 srcset 解析） -->
+    <img srcset="img/gold.png 1x, img/gold.png 2x" alt="详情图3" />
+    <!-- 干扰项：1×1 像素图（应被过滤） -->
+    <img src="img/pixel1.png" alt="pixel" />
+    <!-- 干扰项：16×16 小图标（应被过滤） -->
+    <img src="img/icon16.png" alt="icon" width="16" height="16" />
+    <!-- 干扰项：SVG data URI 占位图（应被过滤） -->
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3C/svg%3E" alt="placeholder" />
+    <!-- 干扰项：加载必然失败的坏图（应被丢弃） -->
+    <img src="img/not-exist-broken.png" alt="broken" />
+  </div>
+
+  <footer style="margin-top:60px;color:#aaa;font-size:12px;text-align:center">
+    mock fixture for ImageGrab e2e test
+  </footer>
+</div>
+
+<!-- 让懒加载在滚动时生效的最小实现（模拟电商页面行为） -->
+<script>
+  (function () {
+    function loadVisible() {
+      document.querySelectorAll('img.lazy').forEach(function (img) {
+        var r = img.getBoundingClientRect();
+        if (r.top < window.innerHeight + 200) {
+          ['data-src', 'data-original', 'data-lazyload', 'data-lazy-src'].forEach(function (k) {
+            if (img.getAttribute(k) && !img.src) img.src = img.getAttribute(k);
+          });
+        }
+      });
+    }
+    window.addEventListener('scroll', loadVisible, { passive: true });
+    loadVisible();
+  })();
+</script>
+</body>
+</html>

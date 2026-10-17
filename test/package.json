@@ -1,0 +1,10 @@
+{
+  "name": "imagegrab-e2e-test",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "图提取 ImageGrab 插件端到端自动化测试（puppeteer-core + Edge）",
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}
