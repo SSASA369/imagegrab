@@ -1,0 +1,10 @@
+# 测试运行产物
+test/node_modules/
+test/downloads/
+test/.profile/
+test/shots/
+
+# 系统与编辑器杂项
+Thumbs.db
+.DS_Store
+*.log

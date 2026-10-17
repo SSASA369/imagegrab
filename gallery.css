@@ -1,0 +1,259 @@
+/* ============================================================
+ * gallery.css —— 画廊页样式（图提取 ImageGrab）
+ * 主题：靛蓝 → 紫罗兰渐变，与插件按钮保持同一品牌色。
+ * ============================================================ */
+
+:root {
+  --primary: #4f46e5;
+  --primary-deep: #4338ca;
+  --accent: #7c3aed;
+  --ink: #1e1b2e;
+  --ink-2: #5b5670;
+  --line: #e8e6f2;
+  --bg: #f6f5fb;
+  --card: #ffffff;
+  --ok: #16a34a;
+  --warn: #d97706;
+  --radius: 14px;
+  --shadow-sm: 0 1px 3px rgba(30, 27, 46, 0.08);
+  --shadow-md: 0 10px 28px rgba(79, 70, 229, 0.16);
+  --font: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 顶部工具栏 ---------- */
+.ig-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.ig-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+.ig-logo {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow: var(--shadow-md);
+}
+.ig-logo svg { width: 22px; height: 22px; }
+
+.ig-brand-text { display: flex; flex-direction: column; min-width: 0; }
+.ig-brand-text strong { font-size: 16px; }
+.ig-source {
+  font-size: 12px;
+  color: var(--ink-2);
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ig-tools { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+.ig-check-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.ig-check-all input { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+
+.ig-count { font-size: 13px; color: var(--ink-2); min-width: 96px; }
+
+/* ---------- 按钮 ---------- */
+.ig-btn {
+  font-family: var(--font);
+  font-size: 14px;
+  border-radius: 999px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  border: 1px solid transparent;
+}
+.ig-btn:active { transform: scale(0.97); }
+.ig-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ig-btn-primary {
+  color: #fff;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow: 0 6px 16px rgba(93, 63, 211, 0.35);
+}
+.ig-btn-primary:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 22px rgba(93, 63, 211, 0.45);
+}
+
+.ig-btn-ghost {
+  color: var(--primary-deep);
+  background: #fff;
+  border-color: var(--line);
+}
+.ig-btn-ghost:hover { background: #f1effc; }
+
+/* ---------- 进度条 ---------- */
+.ig-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  background: #efedfb;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.ig-progress-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: #ddd9f3;
+  overflow: hidden;
+}
+.ig-progress-bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.25s ease;
+}
+
+/* ---------- 完成反馈横幅 ---------- */
+.ig-banner {
+  margin: 16px 24px 0;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  background: #e9f8ef;
+  color: var(--ok);
+  border: 1px solid #bfe8cd;
+}
+.ig-banner.has-fail {
+  background: #fef3e2;
+  color: var(--warn);
+  border-color: #f3d9a8;
+}
+
+/* ---------- 图片网格 ---------- */
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+  padding: 20px 24px 32px;
+}
+
+.ig-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.ig-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.ig-card.checked { border-color: var(--primary); }
+
+.ig-card input[type="checkbox"] {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.ig-thumb {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  background:
+    repeating-conic-gradient(#f0eef8 0% 25%, #ffffff 0% 50%) 0 0 / 24px 24px;
+}
+.ig-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.ig-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--ink-2);
+  border-top: 1px solid var(--line);
+}
+.ig-meta .ig-size { white-space: nowrap; }
+.ig-meta .ig-idx { font-weight: 600; color: var(--primary-deep); }
+
+/* 加载失败的卡片 */
+.ig-card.broken { opacity: 0.5; cursor: not-allowed; }
+.ig-card.broken .ig-thumb { color: #b6b1cc; font-size: 13px; }
+
+/* ---------- 空状态 ---------- */
+.ig-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--ink-2);
+}
+.ig-empty[hidden] { display: none; }
+.ig-empty h2 { margin: 8px 0 0; color: var(--ink); font-size: 20px; }
+.ig-empty p { margin: 0 0 16px; font-size: 14px; max-width: 420px; }
+.ig-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: #efedfb;
+}
+.ig-empty-icon svg { width: 38px; height: 38px; }
+
+/* ---------- 页脚 ---------- */
+.ig-footer {
+  margin-top: auto;
+  padding: 18px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #9a95b2;
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
