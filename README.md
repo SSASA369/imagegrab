@@ -69,5 +69,6 @@ node run-test.mjs
 
 `docs/` 文件夹为插件官方静态网站（纯 HTML/CSS/JS，无外部依赖），通过 GitHub Pages 发布：
 
-- 发布地址：`https://<你的用户名>.github.io/imagegrab/`
+- 发布地址：`https://ssasa369.github.io/imagegrab/`
+- 仓库地址：`https://github.com/SSASA369/imagegrab`
 - 或本地点击 `docs/index.html` 直接预览
